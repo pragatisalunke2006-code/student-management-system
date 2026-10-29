@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Add student' if mode == 'add' else 'Edit student' }}{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>{{ 'Add student' if mode == 'add' else 'Edit ' ~ (s.name or 'student') }}</h1>
+</header>
+
+<form class="panel form" method="post" novalidate>
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <label>Roll number
+    <input name="roll_no" value="{{ s.roll_no or '' }}" required>
+  </label>
+  <label>Full name
+    <input name="name" value="{{ s.name or '' }}" required>
+  </label>
+  <label>Email
+    <input type="email" name="email" value="{{ s.email or '' }}" required>
+  </label>
+  <label>Phone
+    <input name="phone" value="{{ s.phone or '' }}" inputmode="tel">
+  </label>
+  <label>Gender
+    <select name="gender">
+      <option value="">Prefer not to say</option>
+      {% for g in GENDERS %}<option {{ 'selected' if s.gender == g }}>{{ g }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Date of birth
+    <input type="date" name="dob" value="{{ s.dob or '' }}">
+  </label>
+  <label>Course
+    <select name="course" required>
+      <option value="">Choose a course</option>
+      {% for c in COURSES %}<option {{ 'selected' if s.course == c }}>{{ c }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Year
+    <select name="year">
+      {% for y in YEARS %}<option value="{{ y }}" {{ 'selected' if s.year|string == y|string }}>Year {{ y }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Status
+    <select name="status">
+      {% for st in STATUSES %}<option {{ 'selected' if s.status == st }}>{{ st }}</option>{% endfor %}
+    </select>
+  </label>
+  <label class="wide">Address
+    <textarea name="address" rows="3">{{ s.address or '' }}</textarea>
+  </label>
+  <div class="wide row">
+    <button class="btn primary" type="submit">{{ 'Add student' if mode == 'add' else 'Save changes' }}</button>
+    <a class="btn ghost" href="{{ url_for('students') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-head">
+  <h1>Dashboard</h1>
+  <a class="btn primary" href="{{ url_for('add_student') }}">Add student</a>
+</header>
+
+<section class="stats">
+  <div class="stat big"><b>{{ total }}</b><span>students on record</span></div>
+  <div class="stat"><b>{{ active }}</b><span>currently active</span></div>
+  {% for y in YEARS %}
+    <div class="stat"><b>{{ by_year.get(y, 0) }}</b><span>in year {{ y }}</span></div>
+  {% endfor %}
+</section>
+
+<div class="two-col">
+  <section class="panel">
+    <h2>Students per course</h2>
+    {% if by_course %}
+      <ul class="bars">
+        {% for r in by_course %}
+          <li>
+            <span class="lbl">{{ r.course }}</span>
+            <span class="track"><span class="fill" style="width: {{ (r.n / top * 100)|round|int }}%"></span></span>
+            <span class="num">{{ r.n }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty">No students yet. Add the first one to see course numbers here.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Recently added</h2>
+    {% if recent %}
+      <ul class="recent">
+        {% for s in recent %}
+          <li><a href="{{ url_for('edit_student', sid=s.id) }}">{{ s.name }}</a>
+              <small>{{ s.roll_no }} · {{ s.course }}</small></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty">Nothing here yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
